@@ -4,6 +4,8 @@ import 'package:instagram_clone/screens/register_screen.dart';
 import 'package:instagram_clone/utils/colors.dart';
 import 'package:instagram_clone/widgets/button.dart';
 
+import '../services/auth_logic.dart';
+import '../utils/util_functions.dart';
 import '../widgets/text_feild.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -17,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   //controllers for the text feilds
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool isLoaging = false;
 
   @override
 
@@ -26,6 +29,33 @@ class _LoginScreenState extends State<LoginScreen> {
     //dispose the controllers
     _emailController.dispose();
     _passwordController.dispose();
+  }
+
+  //auth logic instance
+  final AuthMethodes _authMethodes = AuthMethodes();
+
+  //login the user
+  void loginUser() async {
+    setState(() {
+      isLoaging = true;
+    });
+    final String email = _emailController.text.trim();
+    final String password = _passwordController.text.trim();
+
+    String result = await _authMethodes.loginWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    //show the snak bar if the user is created or not
+    if (result != "User created successfully") {
+      showSnakBar(context, result);
+    }
+    setState(() {
+      isLoaging = false;
+    });
+
+    print("user logged in");
   }
 
   Widget build(BuildContext context) {
@@ -74,11 +104,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(
                   height: 30,
                 ),
-                CustomButon(
-                  text: 'Log in',
-                  onPressed: () {},
-                  color: Colors.pinkAccent,
-                ),
+                isLoaging
+                    ? const CircularProgressIndicator(
+                        color: primaryColor,
+                      )
+                    : CustomButon(
+                        text: 'Log in',
+                        onPressed: loginUser,
+                        color: Colors.pinkAccent,
+                      ),
                 //button for signup to navigate to signup screen
                 const SizedBox(
                   height: 100,

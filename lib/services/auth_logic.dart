@@ -11,7 +11,7 @@ class AuthMethodes {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   //register new user
-  Future registerWithEmailAndPassword({
+  Future<String> registerWithEmailAndPassword({
     required String email,
     required String password,
     required String userName,
@@ -53,6 +53,42 @@ class AuthMethodes {
 
           res = "User created successfully";
         }
+      }
+    }
+
+    //catch the errors extra error handling
+    on FirebaseAuthException catch (error) {
+      if (error.code == "invalid-email") {
+        res = "Invalid email";
+      } else if (error.code == "weak-password") {
+        res = "Weak password";
+      } else if (error.code == "email-already-in-use") {
+        res = "Email already in use";
+      }
+    } catch (error) {
+      res = error.toString();
+    }
+
+    return res;
+  }
+
+  //login user
+  Future<String> loginWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    String res = "An error occured";
+
+    try {
+      //if the inputs are not empty
+      if (email.isNotEmpty && password.isNotEmpty) {
+        //login the user with email and password
+        await _auth.signInWithEmailAndPassword(
+            email: email, password: password);
+
+        res = "User logged in successfully";
+      } else {
+        res = "Please enter email and password";
       }
     }
 
