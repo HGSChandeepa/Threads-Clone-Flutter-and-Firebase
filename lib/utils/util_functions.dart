@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
+//this methode is for pick the image from the gallery or camera
 
 pickProfileImage(ImageSource source) async {
   //create an instance of image picker
@@ -11,4 +14,14 @@ pickProfileImage(ImageSource source) async {
     return await _file.readAsBytes();
   }
   print("no image selected");
+}
+
+//snakbar
+
+showSnakBar(BuildContext context, String res) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(res),
+    ),
+  );
 }

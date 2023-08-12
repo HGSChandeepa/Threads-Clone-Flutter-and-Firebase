@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram_clone/services/storage_methodes.dart';
 
 class AuthMethodes {
   //firebase auth instance
@@ -15,7 +16,7 @@ class AuthMethodes {
     required String password,
     required String userName,
     required String bio,
-    // required Uint8List profilePic,
+    required Uint8List profilePic,
   }) async {
     String res = "An error occured";
 
@@ -24,10 +25,15 @@ class AuthMethodes {
       if (userName.isNotEmpty &&
           password.isNotEmpty &&
           userName.isNotEmpty &&
-          bio.isNotEmpty) {
+          bio.isNotEmpty &&
+          profilePic.isNotEmpty) {
         //create a new user with email and password
         final UserCredential userCredential = await _auth
             .createUserWithEmailAndPassword(email: email, password: password);
+
+        //upload the profile image to the firebase storage
+        String photoURL = await StorageMethodes()
+            .uploadImage("ProfileImages", false, profilePic);
 
         //if the user is created store the user data in the firestore
         if (userCredential.user != null) {
@@ -42,10 +48,22 @@ class AuthMethodes {
             'bio': bio,
             'followers': [],
             'following': [],
+            'profilePic': photoURL,
           });
 
           res = "User created successfully";
         }
+      }
+    }
+
+    //catch the errors extra error handling
+    on FirebaseAuthException catch (error) {
+      if (error.code == "invalid-email") {
+        res = "Invalid email";
+      } else if (error.code == "weak-password") {
+        res = "Weak password";
+      } else if (error.code == "email-already-in-use") {
+        res = "Email already in use";
       }
     } catch (error) {
       res = error.toString();

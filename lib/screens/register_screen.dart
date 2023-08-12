@@ -25,9 +25,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
   Uint8List? _profileImage;
+  bool isLoading = false;
 
   //auth logic instance
   final AuthMethodes _authMethodes = AuthMethodes();
+
+  //register the user
+  void registerUser() async {
+    setState(() {
+      isLoading = true;
+    });
+    //get the user data from the text feilds
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+    String bio = _bioController.text.trim();
+    String userName = _userNameController.text.trim();
+
+    //register the user
+    String result = await _authMethodes.registerWithEmailAndPassword(
+      email: email,
+      password: password,
+      userName: userName,
+      bio: bio,
+      profilePic: _profileImage!,
+    );
+
+    //show the snak bar if the user is created or not
+    if (result == "User created successfully" ||
+        result == "email-already-in-use" ||
+        result == "weak-password" ||
+        result == "invalid-email") {
+      showSnakBar(context, result);
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
 
@@ -158,24 +191,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(
                   height: 30,
                 ),
-                CustomButon(
-                  text: 'Register',
-                  onPressed: () async {
-                    dynamic result =
-                        await _authMethodes.registerWithEmailAndPassword(
-                            email: _emailController.text,
-                            password: _passwordController.text,
-                            userName: _userNameController.text,
-                            bio: _bioController.text);
-
-                    if (result == null) {
-                      print('error');
-                    } else {
-                      print('success');
-                    }
-                  },
-                  color: Colors.pinkAccent,
-                ),
+                isLoading
+                    ? const CircularProgressIndicator(
+                        color: primaryColor,
+                      )
+                    : CustomButon(
+                        text: 'Register',
+                        onPressed: registerUser,
+                        color: Colors.pinkAccent,
+                      ),
                 //button for signup to navigate to signup screen
 
                 Row(
