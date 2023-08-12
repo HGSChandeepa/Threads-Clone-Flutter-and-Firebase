@@ -40,9 +40,8 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 //for the top space
-                Flexible(
-                  flex: 1,
-                  child: Container(),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.25,
                 ),
                 //image for logo
                 SvgPicture.asset(

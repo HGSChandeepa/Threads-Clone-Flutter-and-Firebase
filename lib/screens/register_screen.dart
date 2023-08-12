@@ -1,9 +1,14 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:instagram_clone/screens/login_screen.dart';
 import 'package:instagram_clone/utils/colors.dart';
+import 'package:instagram_clone/utils/util_functions.dart';
 import 'package:instagram_clone/widgets/button.dart';
 
+import '../services/auth_logic.dart';
 import '../widgets/text_feild.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -19,6 +24,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
+  Uint8List? _profileImage;
+
+  //auth logic instance
+  final AuthMethodes _authMethodes = AuthMethodes();
 
   @override
 
@@ -30,6 +39,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _passwordController.dispose();
     _bioController.dispose();
     _userNameController.dispose();
+  }
+
+  //this methode is for select the image from the gallery
+  void selectImage() async {
+    Uint8List _profileImage = await pickProfileImage(ImageSource.gallery);
+    setState(() {
+      this._profileImage = _profileImage;
+    });
   }
 
   Widget build(BuildContext context) {
@@ -44,11 +61,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 //for the top space
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    child: null,
-                  ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.1,
                 ),
                 //image for logo
                 SvgPicture.asset(
@@ -63,12 +77,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 //add a profile image\
                 Stack(
                   children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.grey[300],
-                      backgroundImage: NetworkImage(
-                          'https://1fid.com/wp-content/uploads/2022/06/cartoon-profile-picture-12-1024x1024.jpg'),
-                    ),
+                    //if the profile image is null show the default image
+                    _profileImage != null
+                        ? CircleAvatar(
+                            radius: 50,
+                            backgroundColor: Colors.grey[300],
+                            backgroundImage: MemoryImage(_profileImage!),
+                          )
+                        : CircleAvatar(
+                            radius: 50,
+                            backgroundColor: Colors.grey[300],
+                            backgroundImage: const NetworkImage(
+                                'https://1fid.com/wp-content/uploads/2022/06/cartoon-profile-picture-12-1024x1024.jpg'),
+                          ),
+
                     Positioned(
                       bottom: 0,
                       right: 0,
@@ -76,12 +98,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         height: 40,
                         width: 40,
                         decoration: BoxDecoration(
-                          color: Colors.white54,
+                          color: Colors.white70,
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        child: const IconButton(
-                          onPressed: null,
-                          icon: Icon(
+                        child: IconButton(
+                          onPressed: selectImage,
+                          icon: const Icon(
                             Icons.add_a_photo,
                             color: Colors.pinkAccent,
                           ),
@@ -138,14 +160,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 CustomButon(
                   text: 'Register',
-                  onPressed: () {},
+                  onPressed: () async {
+                    dynamic result =
+                        await _authMethodes.registerWithEmailAndPassword(
+                            email: _emailController.text,
+                            password: _passwordController.text,
+                            userName: _userNameController.text,
+                            bio: _bioController.text);
+
+                    if (result == null) {
+                      print('error');
+                    } else {
+                      print('success');
+                    }
+                  },
                   color: Colors.pinkAccent,
                 ),
                 //button for signup to navigate to signup screen
-                Flexible(
-                  flex: 1,
-                  child: Container(),
-                ),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
