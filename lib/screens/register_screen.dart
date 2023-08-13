@@ -8,6 +8,9 @@ import 'package:instagram_clone/utils/colors.dart';
 import 'package:instagram_clone/utils/util_functions.dart';
 import 'package:instagram_clone/widgets/button.dart';
 
+import '../responsive/mobile_screen_layout.dart';
+import '../responsive/responsive_layout_screen.dart';
+import '../responsive/web_screen_layout.dart';
 import '../services/auth_logic.dart';
 import '../widgets/text_feild.dart';
 
@@ -51,11 +54,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
 
     //show the snak bar if the user is created or not
-    if (result == "User created successfully" ||
+    if (result != "User created successfully" ||
         result == "email-already-in-use" ||
         result == "weak-password" ||
         result == "invalid-email") {
       showSnakBar(context, result);
+    } else {
+      //here the pushReplacement is used for remove the back button from the screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ResponsiveLayout(
+            webSecreenLayout: WebScreenlayout(),
+            mobileScreenLayout: MobileScreenLayout(),
+          ),
+        ),
+      );
     }
     setState(() {
       isLoading = false;

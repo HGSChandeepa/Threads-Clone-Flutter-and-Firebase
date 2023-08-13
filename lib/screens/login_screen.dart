@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:instagram_clone/responsive/responsive_layout_screen.dart';
 import 'package:instagram_clone/screens/register_screen.dart';
 import 'package:instagram_clone/utils/colors.dart';
 import 'package:instagram_clone/widgets/button.dart';
 
+import '../responsive/mobile_screen_layout.dart';
+import '../responsive/web_screen_layout.dart';
 import '../services/auth_logic.dart';
 import '../utils/util_functions.dart';
 import '../widgets/text_feild.dart';
@@ -48,9 +51,28 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     //show the snak bar if the user is created or not
-    if (result != "User created successfully") {
+    final validErrors = {
+      "email-already-in-use",
+      "weak-password",
+      "invalid-email",
+    };
+
+    if (!validErrors.contains(result)) {
       showSnakBar(context, result);
+    } else {
+      //here the pushReplacement is used for remove the back button from the screen
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ResponsiveLayout(
+            webSecreenLayout: WebScreenlayout(),
+            mobileScreenLayout: MobileScreenLayout(),
+          ),
+        ),
+      );
     }
+
     setState(() {
       isLoaging = false;
     });

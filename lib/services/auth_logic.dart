@@ -1,14 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:instagram_clone/services/storage_methodes.dart';
+import 'package:instagram_clone/models/user.dart' as user_model;
 
 class AuthMethodes {
   //firebase auth instance
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  //get the current user details
+  Future<user_model.User> getCurrentUser() async {
+    User currentUser = _auth.currentUser!;
+    DocumentSnapshot snapshot =
+        await _firestore.collection('users').doc(currentUser.uid).get();
+
+    return user_model.User.fromJSON(snapshot.data() as Map<String, dynamic>);
+  }
 
   //register new user
   Future<String> registerWithEmailAndPassword({
@@ -35,21 +43,34 @@ class AuthMethodes {
         String photoURL = await StorageMethodes()
             .uploadImage("ProfileImages", false, profilePic);
 
+        //user model
+        user_model.User user = user_model.User(
+          uid: userCredential.user!.uid,
+          email: email,
+          userName: userName,
+          bio: bio,
+          profilePic: photoURL,
+          followers: [],
+          following: [],
+        );
+
         //if the user is created store the user data in the firestore
         if (userCredential.user != null) {
           //store the user data in the firestore
           await _firestore
               .collection('users')
               .doc(userCredential.user!.uid)
-              .set({
-            'uid': userCredential.user!.uid,
-            'email': email,
-            'userName': userName,
-            'bio': bio,
-            'followers': [],
-            'following': [],
-            'profilePic': photoURL,
-          });
+              .set(
+                // 'uid': userCredential.user!.uid,
+                // 'email': email,
+                // 'userName': userName,
+                // 'bio': bio,
+                // 'followers': [],
+                // 'following': [],
+                // 'profilePic': photoURL,
+
+                user.toJSON(),
+              );
 
           res = "User created successfully";
         }
