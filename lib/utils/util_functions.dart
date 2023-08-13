@@ -3,7 +3,7 @@ import 'package:image_picker/image_picker.dart';
 
 //this methode is for pick the image from the gallery or camera
 
-pickProfileImage(ImageSource source) async {
+pickImage(ImageSource source) async {
   //create an instance of image picker
   final ImagePicker _imagePicker = ImagePicker();
   XFile? _file = await _imagePicker.pickImage(source: source);

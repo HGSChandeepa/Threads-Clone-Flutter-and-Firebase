@@ -90,7 +90,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   //this methode is for select the image from the gallery
   void selectImage() async {
-    Uint8List _profileImage = await pickProfileImage(ImageSource.gallery);
+    Uint8List _profileImage = await pickImage(ImageSource.gallery);
     setState(() {
       this._profileImage = _profileImage;
     });
