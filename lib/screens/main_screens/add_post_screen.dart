@@ -16,6 +16,7 @@ class AddPostScreen extends StatefulWidget {
 
 class _AddPostScreenState extends State<AddPostScreen> {
   Uint8List? _file;
+  final TextEditingController _descriptionController = TextEditingController();
   //methode to opea a dialog to choose between camera and gallery
   _selectImage(BuildContext context) async {
     return showDialog(
@@ -51,10 +52,34 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     _file = file;
                   });
                 },
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.all(20),
+                child: const Text("Cancle"),
+                onPressed: () {
+                  //remove the Dialogbox
+                  Navigator.of(context).pop();
+                },
               )
             ],
           );
         });
+  }
+
+  void createPost(
+    String uid,
+    String username,
+    String profileImage,
+  ) async {
+    //create a new colection called posts and store the posts
+    //also store the file in to the storage
+    try {} catch (err) {}
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _descriptionController.dispose();
   }
 
   @override
@@ -84,7 +109,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
               centerTitle: false,
               actions: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: createPost,
                   child: const Text(
                     "Post",
                     style: TextStyle(
@@ -109,6 +134,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.6,
                         child: TextField(
+                          controller: _descriptionController,
                           decoration: const InputDecoration(
                             hintText: "Write a caption...",
                             border: InputBorder.none,
