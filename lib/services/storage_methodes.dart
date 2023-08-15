@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:uuid/uuid.dart';
 
 class StorageMethodes {
   //firebase storage  instance
@@ -15,6 +16,14 @@ class StorageMethodes {
     //create a reference for the image here we also select the correct folder
     Reference ref =
         _storage.ref().child(floderName).child(_auth.currentUser!.uid);
+
+    //if the post
+    if (isPost) {
+      String postId = Uuid().v4();
+      ref.child(postId);
+
+      //this will auto add this type userid/postid >> ref
+    }
     //upload the image to the firebase storage
     UploadTask uploadTask = ref.putData(file);
     //get the download url of the image from the snapshot

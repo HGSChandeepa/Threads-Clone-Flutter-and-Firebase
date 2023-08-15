@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:instagram_clone/services/firestore_methodes.dart';
 import 'package:instagram_clone/utils/colors.dart';
 import 'package:instagram_clone/utils/util_functions.dart';
 import 'package:provider/provider.dart';
@@ -66,14 +67,27 @@ class _AddPostScreenState extends State<AddPostScreen> {
         });
   }
 
-  void createPost(
-    String uid,
-    String username,
-    String profileImage,
-  ) async {
+  void postImage({
+    required String uid,
+    required String userName,
+    required String profileImage,
+  }) async {
+    String res = "some error occcured";
     //create a new colection called posts and store the posts
     //also store the file in to the storage
-    try {} catch (err) {}
+    try {
+      res = await FirestoreMethodes().uploadPoast(
+          _file!, _descriptionController.text, uid, userName, profileImage);
+
+      //if the res is success
+      if (res == "success") {
+        showSnakBar(context, "posted!");
+      } else {
+        showSnakBar(context, res);
+      }
+    } catch (error) {
+      showSnakBar(context, error.toString());
+    }
   }
 
   @override
@@ -109,7 +123,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
               centerTitle: false,
               actions: [
                 TextButton(
-                  onPressed: createPost,
+                  onPressed: () => postImage(
+                    profileImage: user.profilePic,
+                    uid: user.uid,
+                    userName: user.userName,
+                  ),
                   child: const Text(
                     "Post",
                     style: TextStyle(
