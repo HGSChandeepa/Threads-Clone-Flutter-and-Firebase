@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import '../../services/storage_methodes.dart';
 import 'package:uuid/uuid.dart';
 
@@ -46,5 +47,26 @@ class FirestoreMethodes {
     }
 
     return res;
+  }
+
+  //Like posts
+  Future<void> likePosts(
+      {required String postID,
+      required String uid,
+      required List likes}) async {
+    try {
+      //if the liked user is already liked then remove the userid from the liked array
+      if (likes.contains(uid)) {
+        await _firestore.collection('posts').doc(postID).update({
+          'likes': FieldValue.arrayRemove([uid]),
+        });
+      } else {
+        await _firestore.collection('posts').doc(postID).update({
+          'likes': FieldValue.arrayUnion([uid]),
+        });
+      }
+    } catch (error) {
+      print(error.toString());
+    }
   }
 }

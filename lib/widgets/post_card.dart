@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:instagram_clone/models/user.dart';
+import 'package:instagram_clone/providers/user_provider.dart';
+import 'package:instagram_clone/services/firestore_methodes.dart';
 import 'package:instagram_clone/utils/colors.dart';
+import 'package:instagram_clone/widgets/like_animation.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class PostCard extends StatelessWidget {
+class PostCard extends StatefulWidget {
   final snap;
   const PostCard({super.key, required this.snap});
 
   @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard> {
+  bool _isLikeAnimaton = false;
+  @override
   Widget build(BuildContext context) {
+    //user
+    final User user = Provider.of<UserProvider>(context).getUser;
     return Container(
       color: mobileBackgroundColor,
       padding: const EdgeInsets.symmetric(
@@ -23,7 +36,7 @@ class PostCard extends StatelessWidget {
                 CircleAvatar(
                   radius: 16,
                   backgroundImage: NetworkImage(
-                    snap["profilePic"],
+                    widget.snap["profilePic"],
                   ),
                 ),
                 Expanded(
@@ -34,7 +47,7 @@ class PostCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          snap["userName"],
+                          widget.snap["userName"],
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -86,25 +99,61 @@ class PostCard extends StatelessWidget {
             ),
           ),
 
-          // image
+          //? post Image
 
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.5,
-            width: double.infinity,
-            child: Image.network(
-              snap["postURL"],
-              fit: BoxFit.cover,
-            ),
+          GestureDetector(
+            onDoubleTap: () async {
+              await FirestoreMethodes().likePosts(
+                likes: widget.snap['likes'],
+                postID: widget.snap['postId'],
+                uid: user.uid,
+              );
+              setState(() {
+                _isLikeAnimaton = true;
+              });
+            },
+            child: Stack(alignment: Alignment.center, children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.5,
+                width: double.infinity,
+                child: Image.network(
+                  widget.snap["postURL"],
+                  fit: BoxFit.cover,
+                ),
+              ),
+              AnimatedOpacity(
+                duration: Duration(milliseconds: 200),
+                opacity: _isLikeAnimaton ? 1 : 0,
+                child: LikeAnimation(
+                  child: const Icon(
+                    Icons.favorite,
+                    color: Colors.white,
+                    size: 120,
+                  ),
+                  isAnimating: _isLikeAnimaton,
+                  duration: Duration(milliseconds: 400),
+                  onEnd: () {
+                    setState(() {
+                      _isLikeAnimaton = false;
+                    });
+                  },
+                ),
+              )
+            ]),
           ),
 
           //reactions
           Row(
             children: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.favorite_border_outlined,
-                  color: Colors.red,
+              LikeAnimation(
+                isAnimating: widget.snap['likes'].contains(user.uid),
+                smallLike: true,
+                child: IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.favorite_border_outlined,
+                    color: Colors.red,
+                  ),
                 ),
               ),
               IconButton(
@@ -144,7 +193,7 @@ class PostCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "${snap['likes'].length} likes",
+                  "${widget.snap['likes'].length} likes",
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: Colors.white60,
                       ),
@@ -158,14 +207,14 @@ class PostCard extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: snap['userName'],
+                          text: widget.snap['userName'],
                           style:
                               Theme.of(context).textTheme.bodyMedium!.copyWith(
                                     color: Colors.white,
                                   ),
                         ),
                         TextSpan(
-                          text: "  ${snap['description']}",
+                          text: "  ${widget.snap['description']}",
                           style:
                               Theme.of(context).textTheme.bodyMedium!.copyWith(
                                     color: Colors.white60,
@@ -190,7 +239,8 @@ class PostCard extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 4),
                   child: Text(
-                    DateFormat.yMMMd().format(snap['datePosted'].toDate()),
+                    DateFormat.yMMMd()
+                        .format(widget.snap['datePosted'].toDate()),
                     style: TextStyle(fontSize: 12, color: secondaryColor),
                   ),
                 ),
