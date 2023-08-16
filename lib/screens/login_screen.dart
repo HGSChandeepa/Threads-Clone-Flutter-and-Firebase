@@ -4,7 +4,6 @@ import '../../responsive/responsive_layout_screen.dart';
 import '../../screens/register_screen.dart';
 import '../../utils/colors.dart';
 import '../../widgets/button.dart';
-
 import '../responsive/mobile_screen_layout.dart';
 import '../responsive/web_screen_layout.dart';
 import '../services/auth_logic.dart';
