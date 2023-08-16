@@ -18,6 +18,8 @@ class AddPostScreen extends StatefulWidget {
 class _AddPostScreenState extends State<AddPostScreen> {
   Uint8List? _file;
   final TextEditingController _descriptionController = TextEditingController();
+
+  bool _isLoading = false;
   //methode to opea a dialog to choose between camera and gallery
   _selectImage(BuildContext context) async {
     return showDialog(
@@ -72,6 +74,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
     required String userName,
     required String profileImage,
   }) async {
+    setState(() {
+      _isLoading = true;
+    });
     String res = "some error occcured";
     //create a new colection called posts and store the posts
     //also store the file in to the storage
@@ -81,13 +86,29 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
       //if the res is success
       if (res == "success") {
+        setState(() {
+          _isLoading = false;
+        });
+
         showSnakBar(context, "posted!");
+        //this will clear the image and dirrect us to the main page
+        clearImage();
       } else {
+        setState(() {
+          _isLoading = false;
+        });
         showSnakBar(context, res);
       }
     } catch (error) {
       showSnakBar(context, error.toString());
     }
+  }
+
+  ///clear image
+  void clearImage() {
+    setState(() {
+      _file = null;
+    });
   }
 
   @override
@@ -118,7 +139,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
             appBar: AppBar(
               backgroundColor: mobileBackgroundColor,
               leading: IconButton(
-                  icon: const Icon(Icons.arrow_back), onPressed: () {}),
+                  icon: const Icon(Icons.arrow_back), onPressed: clearImage),
               title: const Text(
                 "Create New Post",
                 style: TextStyle(
@@ -148,6 +169,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
             body: SingleChildScrollView(
               child: Column(
                 children: [
+                  //show the progress bar if the image is uploading
+                  _isLoading
+                      ? const LinearProgressIndicator()
+                      : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(),
+                        ),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.start,

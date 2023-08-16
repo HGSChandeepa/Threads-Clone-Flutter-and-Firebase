@@ -19,8 +19,8 @@ class StorageMethodes {
 
     //if the post
     if (isPost) {
-      String postId = Uuid().v4();
-      ref.child(postId);
+      String postId = const Uuid().v4();
+      ref = ref.child(postId);
 
       //this will auto add this type userid/postid >> ref
     }
