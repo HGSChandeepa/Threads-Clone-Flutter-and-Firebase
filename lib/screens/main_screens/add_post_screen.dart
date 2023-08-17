@@ -58,7 +58,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
               ),
               SimpleDialogOption(
                 padding: EdgeInsets.all(20),
-                child: const Text("Cancle"),
+                child: const Text("Cancel"),
                 onPressed: () {
                   //remove the Dialogbox
                   Navigator.of(context).pop();
@@ -195,7 +195,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                           maxLines: 8,
                         ),
                       ),
-                      Divider(),
+                      Divider(
+                        color: secondaryColor,
+                      ),
                     ],
                   ),
                   Container(
