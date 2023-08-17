@@ -61,18 +61,10 @@ class AuthMethodes {
               .collection('users')
               .doc(userCredential.user!.uid)
               .set(
-                // 'uid': userCredential.user!.uid,
-                // 'email': email,
-                // 'userName': userName,
-                // 'bio': bio,
-                // 'followers': [],
-                // 'following': [],
-                // 'profilePic': photoURL,
-
                 user.toJSON(),
               );
 
-          res = "User created successfully";
+          res = "success";
         }
       }
     }
@@ -107,7 +99,7 @@ class AuthMethodes {
         await _auth.signInWithEmailAndPassword(
             email: email, password: password);
 
-        res = "User logged in successfully";
+        res = "success";
       } else {
         res = "Please enter email and password";
       }
@@ -127,5 +119,10 @@ class AuthMethodes {
     }
 
     return res;
+  }
+
+  //sign out
+  Future<void> signOut() async {
+    await _auth.signOut();
   }
 }

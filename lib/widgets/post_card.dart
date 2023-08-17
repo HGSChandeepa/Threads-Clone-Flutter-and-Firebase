@@ -54,7 +54,7 @@ class _PostCardState extends State<PostCard> {
                               fontSize: 16),
                         ),
                         Text(
-                          user.bio,
+                          "user.bio",
                           style: TextStyle(color: Colors.white),
                         ),
                       ],

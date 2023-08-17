@@ -54,12 +54,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
 
     //show the snak bar if the user is created or not
-    if (result != "User created successfully" ||
-        result == "email-already-in-use" ||
+    if (result == "email-already-in-use" ||
         result == "weak-password" ||
         result == "invalid-email") {
       showSnakBar(context, result);
-    } else {
+    } else if (result == 'success') {
       //here the pushReplacement is used for remove the back button from the screen
       Navigator.pushReplacement(
         context,
@@ -212,7 +211,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     : CustomButon(
                         text: 'Register',
                         onPressed: registerUser,
-                        color: Colors.pinkAccent,
                       ),
                 //button for signup to navigate to signup screen
 

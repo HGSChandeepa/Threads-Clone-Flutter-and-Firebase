@@ -50,15 +50,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     //show the snak bar if the user is created or not
-    final validErrors = {
-      "email-already-in-use",
-      "weak-password",
-      "invalid-email",
-    };
 
-    if (!validErrors.contains(result)) {
+    if (result == "email-already-in-use" ||
+        result == "weak-password" ||
+        result == "invalid-email") {
       showSnakBar(context, result);
-    } else {
+    } else if (result == 'success') {
       //here the pushReplacement is used for remove the back button from the screen
 
       Navigator.pushReplacement(
@@ -132,7 +129,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     : CustomButon(
                         text: 'Log in',
                         onPressed: loginUser,
-                        color: Colors.pinkAccent,
                       ),
                 //button for signup to navigate to signup screen
                 const SizedBox(
