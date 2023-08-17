@@ -65,7 +65,9 @@ class FirestoreMethodes {
         });
       }
     } catch (error) {
-      print(error.toString());
+      if (kDebugMode) {
+        print(error.toString());
+      }
     }
   }
 
