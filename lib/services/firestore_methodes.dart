@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import '../../services/storage_methodes.dart';
 import 'package:uuid/uuid.dart';
 
@@ -72,6 +71,10 @@ class FirestoreMethodes {
 
   //delete post
   Future<void> deletePost({required String postId}) async {
-    await _firestore.collection('posts').doc(postId).delete();
+    try {
+      await _firestore.collection('posts').doc(postId).delete();
+    } catch (error) {
+      print(error.toString());
+    }
   }
 }
