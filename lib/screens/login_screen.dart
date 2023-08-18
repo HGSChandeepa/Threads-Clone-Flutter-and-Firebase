@@ -92,10 +92,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: MediaQuery.of(context).size.height * 0.25,
                 ),
                 //image for logo
-                SvgPicture.asset(
-                  'assets/ic_instagram.svg',
-                  color: primaryColor,
-                  height: 64,
+                Image.asset(
+                  'assets/threads.png',
+                  height: 80,
                 ),
                 const SizedBox(
                   height: 64,

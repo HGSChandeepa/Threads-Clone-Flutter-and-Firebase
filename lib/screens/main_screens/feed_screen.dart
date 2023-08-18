@@ -12,11 +12,9 @@ class FeedScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: mobileBackgroundColor,
-          title: SvgPicture.asset(
-            'assets/ic_instagram.svg',
-            // ignore: deprecated_member_use
-            color: primaryColor,
-            height: 32,
+          title: Image.asset(
+            'assets/threads.png',
+            height: 40,
           ),
           actions: [
             IconButton(

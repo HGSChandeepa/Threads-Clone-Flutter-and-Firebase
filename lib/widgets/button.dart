@@ -19,12 +19,12 @@ class CustomButon extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(4)),
           ),
-          color: Colors.pink,
+          color: mainYellowColor,
         ),
         child: TextButton(
           onPressed: onPressed,
           style: ButtonStyle(
-            foregroundColor: MaterialStatePropertyAll(Colors.white),
+            foregroundColor: MaterialStatePropertyAll(Colors.black),
           ),
           child: Text(
             text,

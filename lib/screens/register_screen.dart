@@ -111,10 +111,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: MediaQuery.of(context).size.height * 0.1,
                 ),
                 //image for logo
-                SvgPicture.asset(
-                  'assets/ic_instagram.svg',
-                  color: primaryColor,
-                  height: 64,
+                Image.asset(
+                  'assets/threads.png',
+                  height: 80,
                 ),
                 const SizedBox(
                   height: 30,
@@ -149,9 +148,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         child: IconButton(
                           onPressed: selectImage,
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.add_a_photo,
-                            color: Colors.pinkAccent,
+                            color: Colors.yellow.shade600,
                           ),
                         ),
                       ),

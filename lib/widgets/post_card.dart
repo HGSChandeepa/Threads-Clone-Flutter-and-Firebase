@@ -76,8 +76,10 @@ class _PostCardState extends State<PostCard> {
                           children: [
                             ListTile(
                               onTap: () async {
-                                await FirestoreMethodes()
-                                    .deletePost(postId: widget.snap['postId']);
+                                await FirestoreMethodes().deletePost(
+                                    postId: widget.snap['postId'],
+                                    currentUserUid:
+                                        user.uid); //:TODO delete the post
                                 Navigator.pop(context);
                               },
                               leading: const Icon(Icons.delete),
@@ -128,7 +130,7 @@ class _PostCardState extends State<PostCard> {
                 child: LikeAnimation(
                   child: const Icon(
                     Icons.favorite,
-                    color: Colors.white,
+                    color: mainYellowColor,
                     size: 120,
                   ),
                   isAnimating: _isLikeAnimaton,
@@ -160,11 +162,11 @@ class _PostCardState extends State<PostCard> {
                     icon: widget.snap['likes'].contains(user.uid)
                         ? const Icon(
                             Icons.favorite,
-                            color: Colors.red,
+                            color: mainYellowColor,
                           )
                         : const Icon(
                             Icons.favorite_border_outlined,
-                            color: Colors.red,
+                            color: mainYellowColor,
                           )),
               ),
               IconButton(

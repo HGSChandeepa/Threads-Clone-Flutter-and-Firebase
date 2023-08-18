@@ -18,25 +18,6 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     _pageController.jumpToPage(page);
   }
 
-  //?initial methode for getting the user name
-  // String userName = "";
-
-  // void getUserName() async {
-  //   //get the uid of the current user
-  //   FirebaseAuth _auth = FirebaseAuth.instance;
-  //   String uid = await _auth.currentUser!.uid;
-
-  //   //get the user name from the firestore
-  //   DocumentSnapshot snapshot =
-  //       await FirebaseFirestore.instance.collection('users').doc(uid).get();
-
-  //   setState(() {
-  //     userName = snapshot['userName'];
-  //   });
-  // }
-
-  //?new methode for getting the user name
-
   @override
   void dispose() {
     super.dispose();

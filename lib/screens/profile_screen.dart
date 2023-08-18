@@ -96,7 +96,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         : Scaffold(
             appBar: AppBar(
               backgroundColor: mobileBackgroundColor,
-              title: Text(userData['userName']),
+              title: const Text(
+                "Profile",
+                style: TextStyle(
+                    color: mainYellowColor,
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold),
+              ),
               centerTitle: false,
             ),
             body: ListView(
@@ -144,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             backgroundColor:
                                                 mobileBackgroundColor,
                                             textColor: primaryColor,
-                                            borderColor: Colors.grey,
+                                            borderColor: mainYellowColor,
                                             function: () async {
                                               await AuthMethodes().signOut();
                                               Navigator.of(context)
@@ -159,7 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ? FollowButton(
                                                 backgroundColor:
                                                     mobileBackgroundColor,
-                                                borderColor: Colors.grey,
+                                                borderColor: mainYellowColor,
                                                 text: "UnFollow",
                                                 textColor: primaryColor,
                                                 function: () async {
@@ -178,7 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             : FollowButton(
                                                 backgroundColor:
                                                     mobileBackgroundColor,
-                                                borderColor: Colors.grey,
+                                                borderColor: mainYellowColor,
                                                 text: "Follow",
                                                 textColor: primaryColor,
                                                 function: () async {

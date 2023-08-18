@@ -72,9 +72,25 @@ class FirestoreMethodes {
   }
 
   //delete post
-  Future<void> deletePost({required String postId}) async {
+
+  Future<void> deletePost(
+      {required String postId, required String currentUserUid}) async {
     try {
-      await _firestore.collection('posts').doc(postId).delete();
+      // Fetch the post data to check its owner
+      DocumentSnapshot postSnapshot =
+          await _firestore.collection('posts').doc(postId).get();
+      if (postSnapshot.exists) {
+        Map<String, dynamic> postData =
+            postSnapshot.data() as Map<String, dynamic>;
+
+        // Check if the current user is the owner of the post
+        if (postData['ownerUid'] == currentUserUid) {
+          // Delete the post since the user is the owner
+          await _firestore.collection('posts').doc(postId).delete();
+        } else {
+          print("You are not the owner of this post. Deletion not allowed.");
+        }
+      }
     } catch (error) {
       print(error.toString());
     }

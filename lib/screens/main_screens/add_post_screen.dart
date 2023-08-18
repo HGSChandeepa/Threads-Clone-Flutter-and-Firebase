@@ -124,15 +124,30 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
     return _file == null
         ? Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
+              Image.asset(
+                'assets/threads.png',
+                height: 80,
+              ),
               Center(
-                child: IconButton(
-                  onPressed: () => _selectImage(context),
-                  icon: const Icon(Icons.upload),
+                child: Column(
+                  children: [
+                    IconButton(
+                      onPressed: () => _selectImage(context),
+                      icon: const Icon(
+                        Icons.upload,
+                        color: mainYellowColor,
+                        size: 50,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: const Text("Select an image to post"),
+                    ),
+                  ],
                 ),
               ),
-              const Text("Select an image to post"),
             ],
           )
         : Scaffold(
